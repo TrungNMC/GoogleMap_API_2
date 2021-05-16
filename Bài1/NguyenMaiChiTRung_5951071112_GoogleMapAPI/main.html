@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Map</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="map"></div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDc7PnOq3Hxzq6dxeUVaY8WGLHIePl0swY&callback=initMap&libraries=geometry&v=weekly"
+            async></script>
+    <script>
+        function initMap() {
+            const r = 13;
+            const d = r * 2;
+            var BuuDien = { lat: 10.779857892281498, lng: 106.69987531043418 };
+            var VanMieu = { lat: 21.02745075825922, lng: 105.83542886604286 };
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 21,
+                center: BuuDien,
+            });
+
+            const markerBuuDien = new google.maps.Marker({
+                position: BuuDien,
+                title: "Bưu điện Thành Phố Hồ Chí Minh",
+                map: map,
+                animation: google.maps.Animation.DROP,
+                icon: {
+                    url: "BuuDien.jpg",
+                    scaledSize: new google.maps.Size(60, 60) }         
+            });
+
+            const markerVanMieu = new google.maps.Marker({
+                position: VanMieu,
+                title: "Văn Miếu Quốc Tử Giám Hà Nội",
+                map: map,
+                animation: google.maps.Animation.DROP,
+                icon: {
+                    url: "VanMieu.jpg",
+                    scaledSize: new google.maps.Size(60, 60) }        
+            });
+
+            const directionsService = new google.maps.DirectionsService();
+            const directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
+            var request = {
+                origin: "Bưu điện trung tâm hoành tráng hoàn thành năm 1891, với sảnh chính có mái vòm & mặt sơn mang dấu ấn thời gian.",
+                destination: "10.779857892281498, 106.69987531043418",
+            };
+            directionsService.route(request, function (response, status) {
+                if (status == 'OK') {
+                    directionsRenderer.setDirections(response);
+                }
+            });
+            
+            markerBuuDien.addListener('click', () => {
+                var infowindowBuuDien = new google.maps.InfoWindow({
+                    content: 'Bưu điện Trung tâm thành phố Hồ Chí Minh là một công trình kiến trúc có lịch sử hơn 100 năm và là một điểm đến hấp dẫn dành cho du khách cũng như người dân thành phố.',
+                });
+                infowindowBuuDien.open(map, markerBuuDien);
+            });
+
+            markerVanMieu.addListener('click', () => {
+                var infowindowVanMieu = new google.maps.InfoWindow({
+                    content: 'Văn Miếu Quốc Tử Giám là quần thể di tích về trường đại học đầu tiên của nước ta.',
+                });
+                infowindowVanMieu.open(map, markerVanMieu);
+            });
+
+            var BuuDienCircle = new google.maps.Circle({
+                strokeColor: "#1abc9c",
+                strokeOpacity: 0.9,
+                strokeWeight: 2,
+                fillColor: "#1abc9c",
+                fillOpacity: 0.25,
+                center: BuuDien,
+                radius: r,
+                map
+            });
+
+            var VanMieuCircle = new google.maps.Circle({
+                strokeColor: "#3498db",
+                strokeOpacity: 0.9,
+                strokeWeight: 2,
+                fillColor: "#3498db",
+                fillOpacity: 0.25,
+                center: VanMieu,
+                radius: r,
+                map,
+            });
+            const BuuDienPoint = new google.maps.LatLng(BuuDien.lat, BuuDien.lng)
+            var pos1 = google.maps.geometry.spherical.computeOffset(BuuDienPoint, d, 0);
+            var pos2 = google.maps.geometry.spherical.computeOffset(BuuDienPoint, d, 120);
+            var pos3 = google.maps.geometry.spherical.computeOffset(BuuDienPoint, d, -120);
+            var BuuDienNgoaiTiep = new google.maps.Polygon({
+                path: [pos1, pos2, pos3],
+                strokeColor: '#2ecc71',
+                strokeOpacity: 1,
+                strokeWeight: 2,
+                fillColor: '#27ae60',
+                fillOpacity: 0.25,
+                map,
+            });
+            var pos4 = google.maps.geometry.spherical.computeOffset(BuuDienPoint, r, 0);
+            var pos5 = google.maps.geometry.spherical.computeOffset(BuuDienPoint, r, 120);
+            var pos6 = google.maps.geometry.spherical.computeOffset(BuuDienPoint, r, -120);
+            var BuuDienNoiTiep = new google.maps.Polygon({
+                path: [pos4, pos5, pos6],
+                strokeColor: '#2ecc71',
+                strokeOpacity: 1,
+                strokeWeight: 2,
+                fillColor: '#27ae60',
+                fillOpacity: 0.25,
+                map,
+            });
+
+            const VanMieuPoint = new google.maps.LatLng(VanMieu.lat, VanMieu.lng);
+            var pos7 = google.maps.geometry.spherical.computeOffset(VanMieuPoint, d, 0);
+            var pos8 = google.maps.geometry.spherical.computeOffset(VanMieuPoint, d, 120);
+            var pos9 = google.maps.geometry.spherical.computeOffset(VanMieuPoint, d, -120);
+            var VanMieuNgoaiTiep = new google.maps.Polygon({
+                path: [pos7, pos8, pos9],
+                strokeColor: '#2ecc71',
+                strokeOpacity: 1,
+                strokeWeight: 2,
+                fillColor: '#27ae60',
+                fillOpacity: 0.25,
+                map,
+            });
+
+            var pos10 = google.maps.geometry.spherical.computeOffset(VanMieuPoint, r, 0);
+            var pos11 = google.maps.geometry.spherical.computeOffset(VanMieuPoint, r, 120);
+            var pos12 = google.maps.geometry.spherical.computeOffset(VanMieuPoint, r, -120);
+            var VanMieuNoiTiep = new google.maps.Polygon({
+                path: [pos10, pos11, pos12],
+                strokeColor: '#2ecc71',
+                strokeOpacity: 1,
+                strokeWeight: 2,
+                fillColor: '#27ae60',
+                fillOpacity: 0.25,
+                map,
+            });
+            directionsService.route(
+                {
+                    origin: BuuDienPoint,
+                    destination: VanMieuPoint,
+                    travelMode: google.maps.TravelMode.WALKING,
+                },
+                (response, status) => {
+                    if (status === "OK") {
+                        directionsRenderer.setDirections(response);
+                    }
+                    else {
+                        window.alert("Yêu cầu thất bại !!! " + status);
+                    }
+                }
+            );
+        }
+    </script>
+</body>
+</html>      
